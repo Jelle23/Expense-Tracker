@@ -22,12 +22,17 @@ export class TransactionComponent {
   groupedTransactions: { [key: string]: Transaction[] } = {};
   transactionsByMonth: { [month: string]: Transaction[] } = {};
 
+  constructor(private transactionService: TransactionService) {}
+
   ngOnInit(): void {
-    this.transactions = this.transactionService.getTransactions();
-  }
-  constructor(private transactionService: TransactionService) {
+    this.transactions = this.transactionService.getTransactions().map(t => ({
+      ...t,
+      date: new Date(t.date) // convert date string to Date object
+    }));
     this.groupTransactionsByMonth();
+    this.filteredTransactions = [...this.transactions]; // initialize filtered transactions too
   }
+
 
   groupTransactionsByMonth() {
     this.transactionsByMonth = this.transactions.reduce((acc, transaction) => {
@@ -88,23 +93,62 @@ export class TransactionComponent {
     return totals;
   }
 
-  deleteTransaction(text: string) {
-    this.transactions = this.transactions.filter((transaction) => transaction.text !== text);
+  startNewTransaction() {
+    // Find max existing id (assuming ids are numeric strings)
+    const maxId = this.transactions.reduce((max, t) => {
+      const idNum = parseInt(t.id, 10);
+      return idNum > max ? idNum : max;
+    }, 0);
+
+    this.editingTransaction = {
+      id: (maxId + 1).toString(),  // generate next id as string
+      text: '',
+      amount: 0,
+      date: new Date(),
+      category: this.categories[0],
+      type: 'income'
+    };
   }
+
+
+
+
+deleteTransaction(id: string) {
+  this.transactionService.deleteTransaction(id);
+  this.transactions = this.transactions.filter(t => t.id !== id);
+}
+
+
+
   editTransaction(transaction: Transaction) {
     console.log(this.editingTransaction)
     this.editingTransaction = {...transaction}
   }
+
   saveTransaction() {
-    if(this.editingTransaction) {
-      const index = this.transactions.findIndex(t => t.id === this.editingTransaction?.id)
-      if(index !== -1) {
-        this.transactions[index] = this.editingTransaction;
+    if (this.editingTransaction) {
+      this.editingTransaction.date = new Date(this.editingTransaction.date);
+
+      const existingIndex = this.transactions.findIndex(t => t.id === this.editingTransaction!.id);
+
+      if (existingIndex !== -1) {
+        // Update existing transaction via service
+        this.transactionService.updateTransaction(this.editingTransaction);
+        this.transactions[existingIndex] = { ...this.editingTransaction };
+      } else {
+        // Add new transaction via service
+        this.transactionService.addTransaction(this.editingTransaction);
+        this.transactions.push(this.editingTransaction);
       }
+
+      this.groupTransactionsByMonth();
+
+      this.selectedCategory = '';
+      this.selectedMonth = '';
+      this.filteredTransactions = [...this.transactions];
+
       this.editingTransaction = null;
     }
-
-    
   }
 
   cancelEdit() {

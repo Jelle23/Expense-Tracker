@@ -4,12 +4,12 @@ import { RouterOutlet } from '@angular/router';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { TotalComponent } from './components/total/total.component';
 import { MonthsComponent } from './components/months/months.component';
-import { Transaction } from './models/transaction.model';
+import { GoalsComponent } from './components/goals/goals.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, TransactionComponent, TotalComponent, MonthsComponent],
+  imports: [RouterOutlet, TransactionComponent, TotalComponent, MonthsComponent, GoalsComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

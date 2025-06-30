@@ -1,11 +1,13 @@
 <div>
     <h2>Transactions</h2>
+    <button (click)="startNewTransaction()">Add Transaction</button>
     <table *ngIf="!editingTransaction">
         <thead>
             <tr>
                 <th>Text</th>
                 <th>Category</th>
                 <th>Amount</th>
+                <th>Date</th>
                 <th>Buttons</th>
             </tr>
         </thead>
@@ -14,6 +16,7 @@
                 <td>{{transaction.text}}</td>
                 <td>{{transaction.category}}</td>
                 <td>{{transaction.amount | currency}}</td>
+                <td>{{transaction.date | date }}</td>
                 <td>
                     <button class="edit-btn" (click)="editTransaction(transaction)">Edit</button>
                     <button (click)="deleteTransaction(transaction.text)">Delete</button>
@@ -26,13 +29,17 @@
         <h3>Edit Transaction</h3>
         <form (ngSubmit)="saveTransaction()">
             <label>
+              Text:
+              <input type="text" [(ngModel)]="editingTransaction!.text" name="text" required />
+            </label>
+
+            <label>
                 Type:
                 <select [(ngModel)]="editingTransaction!.type" name="type" required>
                     <option value="income">Income</option>
                     <option value="expense">Expense</option>
                 </select>
             </label>
-
 
             <label for="category">Category</label>
             <select [(ngModel)]="editingTransaction!.category" name="category" required>

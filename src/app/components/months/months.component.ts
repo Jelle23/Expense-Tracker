@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
+import { Subscription } from 'rxjs';
 import { Transaction, TransactionService } from '../../services/transaction.service';
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
 
@@ -11,10 +12,12 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
   templateUrl: './months.component.html',
   styleUrls: ['./months.component.css']
 })
-export class MonthsComponent implements OnInit {
+export class MonthsComponent implements OnInit, OnDestroy {
   private monthOrder = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'];
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
   transactions: Transaction[] = [];
   groupedTransactions: {
     [year: string]: {
@@ -33,17 +36,30 @@ export class MonthsComponent implements OnInit {
     expenseList: Transaction[];
   } | null = null;
 
-  selectedYear: string = ''; // Keep track of selected year
-  years: string[] = []; // List of available years
+  selectedYear: string = '';
+  years: string[] = [];
+
+  private subscription!: Subscription;
 
   constructor(private transactionService: TransactionService) {}
 
   ngOnInit(): void {
-    this.transactions = this.transactionService.getTransactions();
-    this.groupTransactionsByYearAndMonth();
+    // Subscribe to the transaction observable to update when data changes
+    this.subscription = this.transactionService.transactions$.subscribe(transactions => {
+      this.transactions = transactions.map(t => ({
+        ...t,
+        date: new Date(t.date) // Ensure dates are Date objects
+      }));
+      this.groupTransactionsByYearAndMonth();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private groupTransactionsByYearAndMonth(): void {
+    this.groupedTransactions = {}; // reset to avoid duplication
 
     const uniqueYears = Array.from(new Set(this.transactions.map(t => t.date.getFullYear().toString())));
     uniqueYears.forEach(year => {
@@ -76,8 +92,8 @@ export class MonthsComponent implements OnInit {
       }
     });
 
-    this.years = uniqueYears.sort(); 
-    this.selectedYear = this.years[0];
+    this.years = uniqueYears.sort();
+    this.selectedYear = this.years.length > 0 ? this.years[0] : '';
   }
 
   get groupedTransactionKeysForSelectedYear(): string[] {
@@ -90,7 +106,7 @@ export class MonthsComponent implements OnInit {
   }
 
   openMonthDetails(month: string): void {
-    const details = this.groupedTransactions[this.selectedYear][month];
+    const details = this.groupedTransactions[this.selectedYear]?.[month];
     if (details) {
       this.selectedMonthDetails = {
         month,

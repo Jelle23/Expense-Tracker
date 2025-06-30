@@ -1,0 +1,27 @@
+<h2>Set a Financial Goal</h2>
+<form (ngSubmit)="addGoal()">
+  <label>Title:
+    <input [(ngModel)]="newGoal.title" name="title" required />
+  </label>
+  <label>Target Amount:
+    <input type="number" [(ngModel)]="newGoal.targetAmount" name="targetAmount" required />
+  </label>
+  <button type="submit">Add Goal</button>
+</form>
+
+
+<hr />
+
+<div *ngFor="let goal of goals" class="goal">
+  <h3>{{ goal.title }}</h3>
+
+  <p>Progress: €{{ goal.currentAmount }} / €{{ goal.targetAmount }}</p>
+  <progress [value]="goal.currentAmount" [max]="goal.targetAmount"></progress>
+  <p>{{ getProgressPercentage(goal) | number: '1.0-1' }}%</p>
+
+  <label>Add to Progress: 
+    <input type="number" #amount />
+    <button (click)="updateProgress(goal, amount.valueAsNumber)">Update</button>
+  </label>
+</div>
+
