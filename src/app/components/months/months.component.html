@@ -1,0 +1,43 @@
+<div class="tabs">
+  <!-- Year Tabs -->
+  <div *ngFor="let year of years" 
+       [class.active]="year === selectedYear" 
+       (click)="selectYear(year)" class="tab">
+    {{ year }}
+  </div>
+</div>
+
+<div class="months-container">
+  <!-- Display months for selected year -->
+  <div *ngFor="let month of groupedTransactionKeysForSelectedYear" class="month-item">
+    <div class="month-overview">
+      <h3 class="title">{{ month }}</h3>
+      <p><strong>Income:</strong> <span class="income">{{ groupedTransactions[selectedYear][month].totalIncome | currency }}</span></p>
+      <p><strong>Expense:</strong> <span class="expense">{{ groupedTransactions[selectedYear][month].totalExpenses | currency }}</span></p>
+      <button (click)="openMonthDetails(month)">View Details</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Detailed Lists -->
+<div *ngIf="selectedMonthDetails" class="modal">
+  <div class="modal-content">
+    <h2>{{ selectedMonthDetails.month }}</h2>
+
+    <h3>Income</h3>
+    <ul>
+      <li *ngFor="let income of selectedMonthDetails.incomeList">
+        {{ income.text }} - <span class="income">{{ income.amount | currency }}</span>
+      </li>
+    </ul>
+
+    <h3>Expenses</h3>
+    <ul>
+      <li *ngFor="let expense of selectedMonthDetails.expenseList">
+        {{ expense.text }} - <span class="expense">{{ expense.amount | currency }}</span>
+      </li>
+    </ul>
+
+    <button (click)="closeModal()">Close</button>
+  </div>
+</div>

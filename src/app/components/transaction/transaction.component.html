@@ -1,0 +1,92 @@
+<div>
+    <h2>Transactions</h2>
+    <table *ngIf="!editingTransaction">
+        <thead>
+            <tr>
+                <th>Text</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Buttons</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let transaction of transactions">
+                <td>{{transaction.text}}</td>
+                <td>{{transaction.category}}</td>
+                <td>{{transaction.amount | currency}}</td>
+                <td>
+                    <button class="edit-btn" (click)="editTransaction(transaction)">Edit</button>
+                    <button (click)="deleteTransaction(transaction.text)">Delete</button>
+                </td>
+            </tr> 
+        </tbody>
+    </table>
+
+    <div class="edit-form-container" *ngIf="editingTransaction">
+        <h3>Edit Transaction</h3>
+        <form (ngSubmit)="saveTransaction()">
+            <label>
+                Type:
+                <select [(ngModel)]="editingTransaction!.type" name="type" required>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+            </label>
+
+
+            <label for="category">Category</label>
+            <select [(ngModel)]="editingTransaction!.category" name="category" required>
+              <option *ngFor="let category of categories" [value]="category">{{ category | capitalize }}</option>
+            </select>
+
+            <label>
+                Amount:
+                <input type="number" [(ngModel)]="editingTransaction!.amount" name="amount" required>
+            </label>
+
+            <label>
+                Date:
+                <input type="date" [(ngModel)]="editingTransaction!.date" name="date" required>
+            </label>
+
+            <button type="submit">Save</button>
+            <button type="button" (click)="cancelEdit()">Cancel</button>
+        </form>
+    </div>
+
+    <div *ngFor="let category of objectKeys(groupedTransactions)" class="transaction-category">
+        <h3>{{ category | capitalize }}</h3>
+        <ul class="transaction-list">
+          <li *ngFor="let transaction of groupedTransactions[category]" class="transaction-item">
+            {{ transaction.text }} - {{ transaction.amount }} 
+          </li>
+        </ul>
+      </div>      
+      
+      <div class="category-filter">
+        <label for="categoryFilter">Filter by Category</label>
+        <select [(ngModel)]="selectedCategory" (ngModelChange)="filterByCategory()">
+          <option value="">All</option>
+          <option *ngFor="let category of categories" [value]="category">{{ category | capitalize }}</option>
+        </select>
+      </div>
+        
+      <ul class="transaction-list">
+        <li *ngFor="let transaction of filteredTransactions" class="transaction-item">
+          {{ transaction.text }} - €{{ transaction.amount }} - {{ transaction.date | date }}
+        </li>
+      </ul>
+
+      <div *ngIf="selectedCategory" class="category-total">
+        <p>Total for {{ selectedCategory | capitalize }}: {{ getTotalForFilteredCategory() | currency }}</p>
+      </div>
+
+      <div class="totals-by-category">
+        <h3>Total Amounts by Category</h3>
+        <ul>
+          <li *ngFor="let category of categories">
+            {{ category | capitalize }}: {{ getTotalsByCategory()[category] | currency }}
+          </li>
+        </ul>
+      </div>      
+</div>

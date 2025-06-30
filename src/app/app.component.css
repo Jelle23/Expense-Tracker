@@ -1,0 +1,42 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-left h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .header-right {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .header-btn {
+    background-color: white;
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+  }
+  
+  .header-btn:hover {
+    background-color: #45a049;
+    color: white;
+  }
+  

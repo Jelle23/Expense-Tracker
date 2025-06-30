@@ -1,0 +1,35 @@
+.overview-container {
+  max-width: 100%;
+  margin: auto;
+  text-align: center;
+}
+
+.charts-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap; /* Ensures charts wrap on smaller screens */
+}
+
+.chart {
+  flex: 1;
+  min-width: 350px; /* Ensures charts don’t shrink too much */
+  max-width: 50%; /* Limit the maximum width to ensure spacing */
+}
+
+.donut-chart {
+  margin-top: 30px;
+  flex-basis: 100%; /* Makes donut chart span full width */
+}
+
+@media (max-width: 768px) {
+  .charts-container {
+      flex-direction: column; /* Stack charts vertically on small screens */
+      align-items: center;
+  }
+
+  .chart {
+      min-width: 100%; /* Make charts take full width on smaller screens */
+      max-width: 100%;
+  }
+}

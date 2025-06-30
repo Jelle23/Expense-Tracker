@@ -1,0 +1,49 @@
+<div class="overview-container">
+    <h2>Overview</h2>
+  
+    <div class="charts-container">
+      <!-- Income Bar Chart -->
+      <div class="chart">
+        <h3>Income by Category</h3>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [scheme]="'cool'"
+          [results]="incomeChartData"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showDataLabel]="true">
+        </ngx-charts-bar-vertical>
+      </div>
+  
+      <!-- Expense Bar Chart -->
+      <div class="chart">
+        <h3>Expenses by Category</h3>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [scheme]="'flame'"
+          [results]="expenseChartData"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showDataLabel]="true">
+        </ngx-charts-bar-vertical>
+      </div>
+    </div>
+  
+    <div class="donut-chart">
+      <!-- Donut Chart -->
+      <h3>Income vs. Expenses</h3>
+      <ngx-charts-pie-chart
+        [view]="view"
+        [scheme]="'vivid'"
+        [results]="donutChartData"
+        [legend]="showLegend"
+        [labels]="showLabels"
+        [doughnut]="true">
+      </ngx-charts-pie-chart>
+    </div>
+  </div>
+  
