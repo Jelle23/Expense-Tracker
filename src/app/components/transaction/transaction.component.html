@@ -34,17 +34,26 @@
             </label>
 
             <label>
-                Type:
-                <select [(ngModel)]="editingTransaction!.type" name="type" required>
-                    <option value="income">Income</option>
-                    <option value="expense">Expense</option>
-                </select>
+              Type:
+              <select [(ngModel)]="editingTransaction!.type" name="type" required [disabled]="editingTransaction?.category === 'Goals'">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
             </label>
 
             <label for="category">Category</label>
-            <select [(ngModel)]="editingTransaction!.category" name="category" required>
+            <select [ngModel]="editingTransaction?.category" (ngModelChange)="onCategoryChange($event)" name="category" required>
               <option *ngFor="let category of categories" [value]="category">{{ category | capitalize }}</option>
             </select>
+
+            <div *ngIf="editingTransaction?.category === 'Goals'">
+              <label for="goal">Select Goal:</label>
+              <select [(ngModel)]="editingTransaction.text" name="goal" id="goal">
+                <option *ngFor="let goal of goals" [value]="goal.title">
+                  {{ goal.title }}
+                </option>
+              </select>
+            </div>
 
             <label>
                 Amount:

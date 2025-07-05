@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
+import { GoalService, Goal } from '../../services/goal.service'; // adjust path if needed
 import { Transaction, TransactionService } from '../../services/transaction.service';
 import { CapitalizePipe } from '../../pipes/capitalize.pipe';
 
@@ -12,17 +13,43 @@ import { CapitalizePipe } from '../../pipes/capitalize.pipe';
   templateUrl: './transaction.component.html',
   styleUrls: ['./transaction.component.css'],
 })
+
 export class TransactionComponent {
   transactions: Transaction[] = [];
-  categories: string[] = ['Work', 'Food', 'Car', 'Extra', 'Entertainment', 'Football', 'School', 'Healthcare', 'Gift', 'Vacation', 'Tax', 'Clothes', 'Income'];
-  selectedCategory: string = '';
+  categories: string[] = ['Work', 'Food', 'Car', 'Extra', 'Entertainment', 'Football', 'School', 'Healthcare', 'Gift', 'Vacation', 'Tax', 'Clothes', 'Income', 'Goals'];
   selectedMonth: string = '';
   filteredTransactions: Transaction[] = [...this.transactions];
   editingTransaction: Transaction | null = null;
   groupedTransactions: { [key: string]: Transaction[] } = {};
   transactionsByMonth: { [month: string]: Transaction[] } = {};
+  goals: Goal[] = [];
 
-  constructor(private transactionService: TransactionService) {}
+  private _selectedCategory: string = '';
+
+  get selectedCategory(): string {
+    return this._selectedCategory;
+  }
+
+  set selectedCategory(value: string) {
+    this._selectedCategory = value;
+
+    if (this.editingTransaction) {
+      this.editingTransaction.category = value;
+
+      // Lock type to 'expense' if 'Goals' selected
+      if (value === 'Goals') {
+        this.editingTransaction.type = "expense";
+        this.editingTransaction = { ...this.editingTransaction };
+      }
+    }
+
+    this.filterByCategory();
+  }
+
+  constructor(
+    private transactionService: TransactionService,
+    private goalService: GoalService,
+  ) {}
 
   ngOnInit(): void {
     this.transactions = this.transactionService.getTransactions().map(t => ({
@@ -31,8 +58,9 @@ export class TransactionComponent {
     }));
     this.groupTransactionsByMonth();
     this.filteredTransactions = [...this.transactions]; // initialize filtered transactions too
-  }
 
+    this.goals = this.goalService.getGoals();
+  }
 
   groupTransactionsByMonth() {
     this.transactionsByMonth = this.transactions.reduce((acc, transaction) => {
@@ -58,9 +86,9 @@ export class TransactionComponent {
   }
 
   filterByCategory() {
-    if (this.selectedCategory) {
+    if (this._selectedCategory) {
       this.filteredTransactions = this.transactions.filter(
-        (transaction) => transaction.category === this.selectedCategory
+        (transaction) => transaction.category === this._selectedCategory
       );
     } else {
       this.filteredTransactions = [...this.transactions];  
@@ -110,15 +138,10 @@ export class TransactionComponent {
     };
   }
 
-
-
-
-deleteTransaction(id: string) {
-  this.transactionService.deleteTransaction(id);
-  this.transactions = this.transactions.filter(t => t.id !== id);
-}
-
-
+  deleteTransaction(id: string) {
+    this.transactionService.deleteTransaction(id);
+    this.transactions = this.transactions.filter(t => t.id !== id);
+  }
 
   editTransaction(transaction: Transaction) {
     console.log(this.editingTransaction)
@@ -141,13 +164,34 @@ deleteTransaction(id: string) {
         this.transactions.push(this.editingTransaction);
       }
 
+      if (this.editingTransaction.category === 'Goals') {
+        this.goalService.applyTransactionToGoal(
+          this.editingTransaction.text,
+          this.editingTransaction.amount
+        );
+
+        // Optional: refresh the goals array from the service
+        this.goals = this.goalService.getGoals();
+      }
+
       this.groupTransactionsByMonth();
 
-      this.selectedCategory = '';
+      this._selectedCategory = '';
       this.selectedMonth = '';
       this.filteredTransactions = [...this.transactions];
 
       this.editingTransaction = null;
+    }
+  }
+
+  onCategoryChange(newCategory: string) {
+    if (this.editingTransaction) {
+      this.editingTransaction.category = newCategory;
+
+      if (newCategory === 'Goals') {
+        this.editingTransaction.type = 'expense';
+      }
+      // else, you could keep existing type or set a default
     }
   }
 

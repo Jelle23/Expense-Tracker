@@ -8,6 +8,7 @@ export interface Transaction {
   category: string;
   amount: number;
   date: Date;
+  goal?: string;
 }
 
 @Injectable({

@@ -9,19 +9,14 @@
   <button type="submit">Add Goal</button>
 </form>
 
-
 <hr />
 
-<div *ngFor="let goal of goals" class="goal">
+<div *ngFor="let goal of goals" class="goal" [ngStyle]="{ 'border-left': '6px solid ' + getProgressColor(goal) }">
   <h3>{{ goal.title }}</h3>
 
-  <p>Progress: €{{ goal.currentAmount }} / €{{ goal.targetAmount }}</p>
-  <progress [value]="goal.currentAmount" [max]="goal.targetAmount"></progress>
-  <p>{{ getProgressPercentage(goal) | number: '1.0-1' }}%</p>
+  <p>Progress: €{{ goal.currentAmount }} / €{{ goal.targetAmount }} - {{ getProgressPercentage(goal) | number: '1.0-1' }}%</p>
+  <progress [value]="goal.currentAmount" [max]="goal.targetAmount" [ngStyle]="{ '--progress-color': getProgressColor(goal) }"></progress>
 
-  <label>Add to Progress: 
-    <input type="number" #amount />
-    <button (click)="updateProgress(goal, amount.valueAsNumber)">Update</button>
-  </label>
+  
 </div>
 

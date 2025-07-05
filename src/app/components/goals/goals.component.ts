@@ -1,14 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-interface Goal {
-  title: string;
-  targetAmount: number;
-  currentAmount: number;
-  category?: string;
-}
-
+import { Goal, GoalService } from '../../services/goal.service'; // adjust path
 
 @Component({
   selector: 'app-goals',
@@ -19,26 +12,38 @@ interface Goal {
 })
 export class GoalsComponent {
   goals: Goal[] = [];
-
   newGoal: Goal = {
     title: '',
     targetAmount: 0,
     currentAmount: 0,
   };
 
+  constructor(private goalService: GoalService) {}
+
+  ngOnInit(): void {
+    this.goals = this.goalService.getGoals();
+  }
+
   addGoal() {
-    this.goals.push({ ...this.newGoal });
+    this.goalService.addGoal({ ...this.newGoal });
+    this.goals = this.goalService.getGoals(); // Refresh view
     this.newGoal = { title: '', targetAmount: 0, currentAmount: 0 };
   }
 
   updateProgress(goal: Goal, amount: number) {
-    goal.currentAmount += amount;
-    if (goal.currentAmount > goal.targetAmount) {
-      goal.currentAmount = goal.targetAmount;
-    }
+    this.goalService.applyTransactionToGoal(goal.title, amount);
+    this.goals = this.goalService.getGoals(); // Refresh view
   }
 
   getProgressPercentage(goal: Goal): number {
     return (goal.currentAmount / goal.targetAmount) * 100;
   }
+
+    getProgressColor(goal: Goal): string {
+    const percent = this.getProgressPercentage(goal);
+    if (percent >= 80) return 'green';
+    if (percent >= 40) return 'orange';
+    return 'red';
+  }
+
 }
