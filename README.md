@@ -1,27 +1,95 @@
-# ExpenseTracker
+# 💰 Personal Finance Tracker
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.11.
+A simple yet powerful Angular application to help you **track income and expenses**, set **financial goals**, and visualize your **progress** toward those goals — all stored locally in your browser.
 
-## Development server
+![screenshot](screenshot.png) <!-- Optional: Replace with actual image path -->
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## ✨ Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- ✅ Add, edit, and delete **transactions** (income & expenses)
+- 📅 Filter transactions by **month** or **category**
+- 🎯 Create financial **goals** with target amounts
+- 📊 Automatically link **transactions to goals**
+- 🌈 Dynamic progress bars with color indicators
+- 💾 Data persistence via **localStorage** (no backend needed)
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 🚀 Tech Stack
 
-## Running unit tests
+- **Angular** (Standalone Components)
+- **TypeScript**
+- **RxJS (light usage)**
+- **HTML / CSS**
+- **localStorage** (for persistent data)
+- Custom **pipes** and **services** for organization
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
+## 📦 Setup & Installation
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+# Clone the repository
+git clone https://github.com/your-username/personal-finance-tracker.git
+cd personal-finance-tracker
 
-## Further help
+# Install dependencies
+npm install
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+# Start the development server
+ng serve
+Visit http://localhost:4200 in your browser to use the app.
+
+🧠 Usage
+Add a Transaction
+
+Select type (income/expense)
+
+Choose a category
+
+Enter amount and description
+
+Create a Goal
+
+Set title and target amount
+
+Automatically updates when transactions with the Goals category are added
+
+Track Progress
+
+View how much you’ve saved toward each goal
+
+Color-coded progress (Red < 40%, Orange < 80%, Green ≥ 80%)
+
+📁 Project Structure (Overview)
+css
+Kopiëren
+Bewerken
+src/
+├── app/
+│   ├── components/
+│   │   ├── transaction/
+│   │   └── goals/
+│   ├── services/
+│   └── pipes/
+├── assets/
+├── styles.css
+└── main.ts
+✅ Todo / Improvements
+Add data export/import option
+
+Add authentication for multi-user support
+
+Add charts and dashboards
+
+Add recurring transactions
+
+Dark mode support
+
+📄 License
+MIT License © Your Name
+
+🙌 Acknowledgements
+Inspired by personal finance tools and budgeting apps like YNAB, PocketGuard, and traditional spreadsheets.
