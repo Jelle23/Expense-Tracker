@@ -2,8 +2,6 @@
 
 A simple yet powerful Angular application to help you **track income and expenses**, set **financial goals**, and visualize your **progress** toward those goals — all stored locally in your browser.
 
-![screenshot](screenshot.png) <!-- Optional: Replace with actual image path -->
-
 ---
 
 ## ✨ Features
@@ -32,8 +30,7 @@ A simple yet powerful Angular application to help you **track income and expense
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/personal-finance-tracker.git
-cd personal-finance-tracker
+git clone https://github.com/Jelle23/Expense-Tracker.git
 
 # Install dependencies
 npm install
