@@ -19,8 +19,11 @@ export class GoalService {
   private loadFromLocalStorage(): Goal[] {
     const data = localStorage.getItem(this.localStorageKey);
     return data ? JSON.parse(data) : [
-      { title: 'Vacation', targetAmount: 1000, currentAmount: 200 },
-      { title: 'New Phone', targetAmount: 800, currentAmount: 300 }
+      { title: 'Buy a House', targetAmount: 50000, currentAmount: 20250 },
+      { title: 'Start a Business', targetAmount: 30000, currentAmount: 3450 },
+      { title: 'Retirement Fund', targetAmount: 100000, currentAmount: 4150 },
+      { title: 'Kids’ College Fund', targetAmount: 80000, currentAmount: 3680 },
+      { title: 'Dream Wedding', targetAmount: 20000, currentAmount: 6560 }
     ];
   }
 
@@ -54,5 +57,13 @@ export class GoalService {
       }
       this.saveToLocalStorage();
     }
+  }
+
+  getGoalsSortedByProgress(): Goal[] {
+    return [...this.goals].sort((a, b) => {
+      const aProgress = a.currentAmount / a.targetAmount;
+      const bProgress = b.currentAmount / b.targetAmount;
+      return bProgress - aProgress; // descending order
+    });
   }
 }

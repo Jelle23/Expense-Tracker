@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Goal, GoalService } from '../../services/goal.service'; // adjust path
+import { Goal, GoalService } from '../../services/goal.service'; 
 
 @Component({
   selector: 'app-goals',
@@ -21,18 +21,18 @@ export class GoalsComponent {
   constructor(private goalService: GoalService) {}
 
   ngOnInit(): void {
-    this.goals = this.goalService.getGoals();
+    this.goals = this.goalService.getGoalsSortedByProgress();
   }
 
   addGoal() {
     this.goalService.addGoal({ ...this.newGoal });
-    this.goals = this.goalService.getGoals(); // Refresh view
+    this.goals = this.goalService.getGoalsSortedByProgress(); // Refresh view
     this.newGoal = { title: '', targetAmount: 0, currentAmount: 0 };
   }
 
   updateProgress(goal: Goal, amount: number) {
     this.goalService.applyTransactionToGoal(goal.title, amount);
-    this.goals = this.goalService.getGoals(); // Refresh view
+    this.goals = this.goalService.getGoalsSortedByProgress(); // Refresh view
   }
 
   getProgressPercentage(goal: Goal): number {
